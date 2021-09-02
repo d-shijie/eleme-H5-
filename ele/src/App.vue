@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
     <main-tab-bar v-if="show"></main-tab-bar>
   </div>
 </template>
@@ -8,6 +10,7 @@
 import MainTabBar from "./components/tabbar/MainTabBar.vue";
 export default {
   components: { MainTabBar },
+  created() {},
   computed: {
     show() {
       return (
@@ -22,9 +25,7 @@ export default {
 </script>
 <style lang="less">
 @import url("./assets/css/normalize.css");
-#app {
-  
-}
+
 body {
   background-color: #f2f2f2;
 }

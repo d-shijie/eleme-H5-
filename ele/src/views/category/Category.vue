@@ -1,33 +1,9 @@
 <template>
-  <div class="main">
+  <div class="category">
     <nav-bar>
-      <div
-        @click="goto('/search/' + $route.params.geohash)"
-        class="el-icon-search"
-        slot="left"
-      ></div>
-      <div @click="goto('/city')" class="center" slot="center">
-        {{ cityInfo.name }}
-      </div>
-      <div @click="goto('/profile')" class="el-icon-user" slot="right"></div>
+      <div @click="back" class="el-icon-arrow-left" slot="left"></div>
+      <div class="center" slot="center">{{ $store.state.categoryName }}</div>
     </nav-bar>
-    <div class="category">
-      <div class="box">
-        <div
-          @click="gotoCategory(item)"
-          class="item"
-          v-for="item in foodCategory"
-          :key="item.id"
-        >
-          <img :src="cateImgUrl + item.image_url" alt="" />
-          <div class="text">{{ item.title }}</div>
-        </div>
-      </div>
-    </div>
-    <div class="points">
-      <span @click="shift" :class="{ active: currentIndex === 0 }"></span>
-      <span @click="shift" :class="{ active: currentIndex === 1 }"></span>
-    </div>
     <div class="shops">
       <header class="el-icon-map-location">附近商家</header>
       <ul>
@@ -66,120 +42,56 @@
 
 <script>
 import NavBar from "../../components/navbar/NavBar.vue";
+import { getCategory, getFoodShops } from "../../axios/getFoods";
 import { getCityDetail } from "../../axios/getCities";
-import { getFoodCategory, getFoodShops } from "../../axios/getFoods";
 export default {
   components: { NavBar },
   data() {
     return {
-      cityInfo: {},
-      foodCategory: [],
+      latitude: "",
+      longitude: "",
       shops: [],
       cateImgUrl: "https://fuss10.elemecdn.com/",
       shopImgUrl: "//elm.cangdu.org/img/",
-      currentIndex: 0,
     };
   },
-  computed: {
-    pointCount() {
-      return this.foodCategory.length / 8;
-    },
-  },
   created() {
-    getCityDetail(this.$route.params.geohash)
+    getCityDetail(this.$store.state.geohash)
       .then((res) => {
-        this.cityInfo = res.data;
-        getFoodShops(res.data.latitude, res.data.longitude)
-          .then((res) => {
-            this.shops = res.data;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        this.latitude = res.data.latitude;
+        this.longitude = res.data.longitude;
+        this.getFoodShops(this.latitude, this.longitude);
       })
       .catch((err) => {
         console.log(err);
       });
-    getFoodCategory()
+    getCategory()
       .then((res) => {
-        this.foodCategory = res.data;
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);
       });
   },
   methods: {
-    goto(path) {
-      this.$router.push(path);
+    back() {
+      this.$router.back();
     },
-    shift() {
-      let box = document.querySelector(".box");
-      switch (this.currentIndex) {
-        case 0:
-          box.style.left = "-100%";
-          this.currentIndex = 1;
-          break;
-        case 1:
-          box.style.left = 0;
-          this.currentIndex = 0;
-          break;
-      }
-    },
-    gotoCategory(item) {
-      this.$store.commit("setCategoryName", item.title);
-
-      this.$router.push("/category/" + item.id);
+    getFoodShops(latitude, longitude, id) {
+      getFoodShops(latitude, longitude, id)
+        .then((res) => {
+          this.shops = res.data;
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };
 </script>
 <style scoped lang='less'>
 /* @import url(); 引入css类 */
-.category {
-  // background-color: #fff;
-  overflow: hidden;
-  background-color: #fff;
-  .box {
-    position: relative;
-    width: 200%;
-    display: flex;
-    margin-top: 40px;
-    padding: 10px 0 20px 0;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    .item {
-      margin: 10px 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 80px;
-      img {
-        width: 35px;
-      }
-      .text {
-        margin-top: 5px;
-        font-size: 14px;
-        text-align: center;
-      }
-    }
-  }
-}
-.points {
-  width: 100%;
-  position: relative;
-  top: -20px;
-  background-color: #fff;
-  text-align: center;
-  span {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    margin: 0 5px;
-    border-radius: 50%;
-    background-color: #ccc;
-  }
-}
 .shops {
   background-color: #fff;
   padding: 10px 0;
@@ -247,8 +159,5 @@ export default {
       }
     }
   }
-}
-.active {
-  background-color: rgb(113, 113, 255) !important;
 }
 </style>

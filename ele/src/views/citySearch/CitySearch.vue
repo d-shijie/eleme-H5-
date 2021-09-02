@@ -103,7 +103,6 @@ export default {
       getCityLocation(this.$route.params.id, this.keyword)
         .then((res) => {
           this.cities = res.data;
-          console.log(res);
         })
         .catch((err) => {
           console.log(err);

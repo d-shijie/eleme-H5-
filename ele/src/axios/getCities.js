@@ -26,3 +26,13 @@ export function getCityDetail(geohash) {
         url: "/v2/pois/" + geohash
     })
 }
+export function getNearBy(keyword) {
+    return request({
+        url: "/v1/pois",
+        params: {
+            city_id: 1,
+            type: 'nearby',
+            keyword
+        }
+    })
+}

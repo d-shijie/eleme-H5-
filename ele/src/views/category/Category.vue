@@ -4,55 +4,157 @@
       <div @click="back" class="el-icon-arrow-left" slot="left"></div>
       <div class="center" slot="center">{{ $store.state.categoryName }}</div>
     </nav-bar>
-    <div class="shops">
-      <header class="el-icon-map-location">附近商家</header>
-      <ul>
-        <li v-for="item in shops" :key="item.id">
-          <img :src="shopImgUrl + item.image_path" alt="" />
-          <span class="desc">
-            <div class="name">{{ item.name }}</div>
-            <div class="rate">
-              评分:{{ item.rating }}/月售:{{ item.recent_order_num }}
-            </div>
-            <div class="payment">
-              ￥{{ item.float_minimum_order_amount }}起送/配送费￥{{
-                item.float_delivery_fee
-              }}
-            </div>
-          </span>
-          <span class="other">
-            <div class="tags">
-              <span>保</span>
-              <span>准</span>
-              <span>票</span>
-            </div>
-            <div class="brand">
-              <span>蜂鸟专送</span>
-              <span>准时达</span>
-            </div>
-            <div class="time">
-              {{ item.distance }}/{{ item.order_lead_time }}
-            </div>
-          </span>
-        </li>
-      </ul>
+    <div class="banner">
+      <div
+        @click="showCascader"
+        :class="{
+          'el-icon-caret-top': showLeft,
+          'el-icon-caret-bottom': showLeft === false,
+        }"
+      >
+        {{ leftText }}
+      </div>
+      <div
+        @click="showOrderWays"
+        :class="{
+          'el-icon-caret-top': showCenter,
+          'el-icon-caret-bottom': showCenter === false,
+        }"
+      >
+        排序
+      </div>
+      <div
+        @click="showChoices"
+        :class="{
+          'el-icon-caret-top': showRight,
+          'el-icon-caret-bottom': showRight === false,
+        }"
+      >
+        筛选
+      </div>
     </div>
+    <div class="cascader" v-if="showLeft">
+      <div class="first">
+        <div
+          @click="sub(item, index)"
+          class="item"
+          :class="{ active: currentIndex === index }"
+          v-for="(item, index) in category"
+          :key="item.id"
+        >
+          <span class="name"> {{ item.name }}</span>
+          <span class="count">
+            {{ item.count }}
+          </span>
+          <span class="el-icon-arrow-right"></span>
+        </div>
+      </div>
+      <div class="second">
+        <div
+          @click="getShops(item)"
+          class="item"
+          v-for="item in subCategory"
+          :key="item.id"
+        >
+          <span class="name">{{ item.name }}</span>
+          <span class="count">{{ item.count }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="order" v-if="showCenter">
+      <div
+        @click="getOrderShops(index)"
+        class="item"
+        v-for="(item, index) in orderWays"
+        :key="index"
+      >
+        {{ item }}
+      </div>
+    </div>
+    <div class="choices" v-if="showRight">
+      <div class="delivery-ways">
+        <header>配送方式</header>
+        <span
+          :class="{ bgc: deliveryCurrentIndex === index }"
+          @click="delivery(item, index)"
+          class="delivery-way"
+          v-for="(item, index) in deliveryWays"
+          :key="index"
+        >
+          {{ item.text }}
+        </span>
+      </div>
+      <div class="activities">
+        <header>商家属性</header>
+        <span
+          :data-bgc="false"
+          ref="activity"
+          :class="{ bgc: activityCurrentIndex === index }"
+          @click="activity(item, index)"
+          class="activity"
+          v-for="(item, index) in activities"
+          :key="index"
+        >
+          {{ item.name }}</span
+        >
+      </div>
+      <div class="btns">
+        <el-button size="mini" type="success" @click.native="clear"
+          >清空</el-button
+        >
+        <el-button @click.native="getChoiseShops" size="mini" type="primary"
+          >确定{{
+            "(" + (delivery_mode.length + support_ids.length) + ")"
+          }}</el-button
+        >
+      </div>
+    </div>
+    <shop-list :shops="shops"></shop-list>
   </div>
 </template>
 
 <script>
 import NavBar from "../../components/navbar/NavBar.vue";
-import { getCategory, getFoodShops } from "../../axios/getFoods";
+import ShopList from "../../components/shopList/ShopList.vue";
+import {
+  getCategory,
+  getFoodShops,
+  getDeliveryWay,
+  getActivity,
+} from "../../axios/getFoods";
 import { getCityDetail } from "../../axios/getCities";
+
 export default {
-  components: { NavBar },
+  components: { NavBar, ShopList },
   data() {
     return {
       latitude: "",
       longitude: "",
       shops: [],
-      cateImgUrl: "https://fuss10.elemecdn.com/",
-      shopImgUrl: "//elm.cangdu.org/img/",
+      showLeft: false,
+      showCenter: false,
+      showRight: false,
+      leftText: "分类",
+      category: [],
+      subCategory: [],
+      currentIndex: "",
+      restaurant_category_id: "",
+      restaurant_category_ids: [],
+      orderWays: [
+        "起送价",
+        "配送速度",
+        "评分",
+        "智能排序",
+        "距离最近",
+        "销量最高",
+      ],
+      order_by: 4,
+      deliveryWays: [],
+      activities: [],
+      delivery_mode: [],
+      support_ids: [],
+      deliveryCurrentIndex: "",
+      activityCurrentIndex: "",
     };
   },
   created() {
@@ -67,13 +169,37 @@ export default {
       });
     getCategory()
       .then((res) => {
-        console.log(res);
+        this.category = res.data;
       })
       .catch((err) => {
         console.log(err);
       });
+    this.getActivity();
+    this.getDeliveryWay();
   },
   methods: {
+    getActivity() {
+      getActivity()
+        .then((res) => {
+          this.activities = res.data;
+
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getDeliveryWay() {
+      getDeliveryWay()
+        .then((res) => {
+          this.deliveryWays = res.data;
+
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     back() {
       this.$router.back();
     },
@@ -81,7 +207,104 @@ export default {
       getFoodShops(latitude, longitude, id)
         .then((res) => {
           this.shops = res.data;
-          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    sub(item, index) {
+      this.restaurant_category_id = item.id;
+      this.subCategory = item.sub_categories;
+      this.currentIndex = index;
+    },
+    showCascader() {
+      this.showLeft = !this.showLeft;
+      this.showCenter = false;
+      this.showRight = false;
+    },
+    getShops(item) {
+      this.leftText = item.name;
+      this.$store.commit("setCategoryName", item.name);
+      this.restaurant_category_ids = [];
+      this.restaurant_category_ids.push(item.id);
+      this.showLeft = false;
+      getFoodShops(
+        this.latitude,
+        this.longitude,
+        this.restaurant_category_id,
+        this.restaurant_category_ids
+      )
+        .then((res) => {
+          this.shops = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    showOrderWays() {
+      this.showCenter = !this.showCenter;
+      this.showLeft = false;
+      this.showRight = false;
+    },
+    getOrderShops(index) {
+      this.order_by = index + 1;
+      getFoodShops(
+        this.latitude,
+        this.longitude,
+        this.restaurant_category_id,
+        this.restaurant_category_ids,
+        this.order_by
+      )
+        .then((res) => {
+          this.shops = res.data;
+          this.showCenter = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    showChoices() {
+      this.showRight = !this.showRight;
+      this.showCenter = false;
+      this.showLeft = false;
+    },
+    delivery(item, index) {
+      if (this.deliveryCurrentIndex === index) {
+        this.delivery_mode = [];
+        this.deliveryCurrentIndex = "";
+      } else {
+        this.delivery_mode.push(item.id);
+        this.deliveryCurrentIndex = index;
+      }
+    },
+    activity(item, index) {
+      if (this.activityCurrentIndex === index) {
+        this.support_ids.pop();
+        this.activityCurrentIndex = "";
+      } else {
+        this.support_ids.push(item.id);
+        this.activityCurrentIndex = index;
+      }
+    },
+    clear() {
+      this.delivery_mode = [];
+      this.support_ids = [];
+      this.deliveryCurrentIndex = "";
+      this.activityCurrentIndex = "";
+    },
+    getChoiseShops() {
+      getFoodShops(
+        this.latitude,
+        this.longitude,
+        this.restaurant_category_id,
+        this.restaurant_category_ids,
+        this.order_by,
+        this.delivery_mode,
+        this.support_ids
+      )
+        .then((res) => {
+          this.shops = res.data;
+          this.showRight = false;
         })
         .catch((err) => {
           console.log(err);
@@ -92,9 +315,69 @@ export default {
 </script>
 <style scoped lang='less'>
 /* @import url(); 引入css类 */
+.cascader {
+  width: 100%;
+  display: flex;
+  position: fixed;
+  top: 73px;
+  background-color: #fff;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+  div {
+    flex: 1;
+  }
+
+  .first {
+    border-right: 1px solid #eee;
+    .item {
+      font-size: 12px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .name {
+        flex: 1;
+      }
+      .count {
+        display: inline-block;
+        background-color: rgb(223, 223, 223);
+        padding: 2px;
+        color: #fff;
+        border-radius: 10px;
+      }
+    }
+  }
+  .second {
+    .item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      font-size: 12px;
+      border-bottom: 1px solid #eee;
+    }
+  }
+}
+.banner {
+  top: 40px;
+  display: flex;
+  position: fixed;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+  div {
+    border-left: 1px solid #eee;
+    flex: 1;
+    padding: 10px 0;
+    font-size: 12px;
+    text-align: center;
+  }
+}
 .shops {
   background-color: #fff;
   padding: 10px 0;
+  margin-top: 70px;
   header {
     font-size: 14px;
     padding-left: 10px;
@@ -159,5 +442,73 @@ export default {
       }
     }
   }
+}
+.order {
+  width: 100%;
+  position: fixed;
+  top: 73px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  .item {
+    padding: 10px;
+    font-size: 14px;
+    border-top: 1px solid #eee;
+  }
+}
+.choices {
+  width: 100%;
+  position: fixed;
+  top: 73px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  div {
+    font-size: 13px;
+    color: rgb(151, 151, 151);
+  }
+  header {
+    padding: 10px;
+    font-size: 14px;
+    color: #000;
+  }
+  .delivery-ways {
+    .delivery-way {
+      display: inline-block;
+      width: 70px;
+      margin-left: 10px;
+      text-align: center;
+      border-radius: 10px;
+      line-height: 20px;
+      border: 1px solid rgb(109, 109, 109);
+      height: 20px;
+    }
+  }
+  .activities {
+    border-bottom: 1px solid #eee;
+    .activity {
+      display: inline-block;
+      width: 70px;
+      margin: 5px 24px 10px 10px;
+      text-align: center;
+      border-radius: 10px;
+      line-height: 20px;
+      border: 1px solid rgb(109, 109, 109);
+      height: 20px;
+    }
+  }
+}
+.btns {
+  display: flex;
+  margin: 10px 0;
+  justify-content: space-around;
+  .el-button {
+    width: 30%;
+  }
+}
+.active {
+  background-color: #f2f2f2;
+}
+.bgc {
+  color: #fff;
+  background-color: rgb(121, 121, 255) !important;
 }
 </style>

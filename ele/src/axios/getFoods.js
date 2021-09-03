@@ -4,13 +4,17 @@ export function getFoodCategory() {
         url: "/v2/index_entry"
     })
 }
-export function getFoodShops(latitude, longitude, restaurant_category_id) {
+export function getFoodShops(latitude, longitude, restaurant_category_id, restaurant_category_ids, order_by, delivery_mode, support_ids) {
     return request({
         url: "/shopping/restaurants",
         params: {
             latitude,
             longitude,
-            restaurant_category_id
+            restaurant_category_id,
+            restaurant_category_ids,
+            order_by,
+            delivery_mode,
+            support_ids
         }
     })
 }
@@ -33,21 +37,14 @@ export function getCategory(latitude, longitude) {
         }
     })
 }
-export function getDeliveryWay(latitude, longitude) {
+export function getDeliveryWay() {
     return request({
         url: '/shopping/v1/restaurants/delivery_modes',
-        params: {
-            latitude,
-            longitude
-        }
+
     })
 }
-export function getActivity(latitude, longitude) {
+export function getActivity() {
     return request({
-        url: '/v1/restaurants/activity_attributes',
-        params: {
-            latitude,
-            longitude
-        }
+        url: '/shopping/v1/restaurants/activity_attributes',
     })
 }

@@ -28,39 +28,8 @@
       <span @click="shift" :class="{ active: currentIndex === 0 }"></span>
       <span @click="shift" :class="{ active: currentIndex === 1 }"></span>
     </div>
-    <div class="shops">
-      <header class="el-icon-map-location">附近商家</header>
-      <ul>
-        <li v-for="item in shops" :key="item.id">
-          <img :src="shopImgUrl + item.image_path" alt="" />
-          <span class="desc">
-            <div class="name">{{ item.name }}</div>
-            <div class="rate">
-              评分:{{ item.rating }}/月售:{{ item.recent_order_num }}
-            </div>
-            <div class="payment">
-              ￥{{ item.float_minimum_order_amount }}起送/配送费￥{{
-                item.float_delivery_fee
-              }}
-            </div>
-          </span>
-          <span class="other">
-            <div class="tags">
-              <span>保</span>
-              <span>准</span>
-              <span>票</span>
-            </div>
-            <div class="brand">
-              <span>蜂鸟专送</span>
-              <span>准时达</span>
-            </div>
-            <div class="time">
-              {{ item.distance }}/{{ item.order_lead_time }}
-            </div>
-          </span>
-        </li>
-      </ul>
-    </div>
+    <header class="el-icon-location-information">附近商家</header>
+    <shop-list :shops="shops"></shop-list>
   </div>
 </template>
 
@@ -68,15 +37,15 @@
 import NavBar from "../../components/navbar/NavBar.vue";
 import { getCityDetail } from "../../axios/getCities";
 import { getFoodCategory, getFoodShops } from "../../axios/getFoods";
+import ShopList from "../../components/shopList/ShopList.vue";
 export default {
-  components: { NavBar },
+  components: { NavBar, ShopList },
   data() {
     return {
       cityInfo: {},
       foodCategory: [],
       shops: [],
       cateImgUrl: "https://fuss10.elemecdn.com/",
-      shopImgUrl: "//elm.cangdu.org/img/",
       currentIndex: 0,
     };
   },
@@ -250,5 +219,8 @@ export default {
 }
 .active {
   background-color: rgb(113, 113, 255) !important;
+}
+header {
+  padding: 0 0 10px 10px;
 }
 </style>

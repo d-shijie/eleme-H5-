@@ -1,7 +1,7 @@
 <template>
   <div class="shops">
     <ul>
-      <li v-for="item in shops" :key="item.id">
+      <li @click="itemClick(item)" v-for="item in shops" :key="item.id">
         <img :src="shopImgUrl + item.image_path" alt="" />
         <span class="desc">
           <div class="name">{{ item.name }}</div>
@@ -48,7 +48,11 @@ export default {
     };
   },
   created() {},
-  methods: {},
+  methods: {
+    itemClick(item) {
+      this.$router.push("/shop/" + item.id);
+    },
+  },
 };
 </script>
 <style scoped lang='less'>

@@ -19,6 +19,9 @@ const AddAddress = () => import('../views/info/children/AddAdress.vue')
 const AddDetail = () => import('../views/info/children/AddDetail.vue')
 const Payment = () => import('../views/vip/Payment.vue')
 const Category = () => import('../views/category/Category.vue')
+const Shop = () => import('../views/shop/Shop.vue')
+const Goods = () => import('../views/shop/children/Goods.vue')
+const Comments = () => import('../views/shop/children/Comments.vue')
 Vue.use(VueRouter)
 
 const routes = [
@@ -102,6 +105,24 @@ const routes = [
   {
     path: '/category/:id',
     component: Category
+  },
+  {
+    path: "/shop/:id",
+    component: Shop,
+    children: [
+      {
+        redirect: 'goods',
+        path: ''
+      },
+      {
+        path: 'goods',
+        component: Goods
+      },
+      {
+        path: 'comments',
+        component: Comments
+      }
+    ]
   }
 ]
 

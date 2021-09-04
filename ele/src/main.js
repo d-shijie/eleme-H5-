@@ -5,7 +5,9 @@ import store from './store'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import axios from 'axios'
+// 可发送cookie
 axios.defaults.withCredentials = true
+// 事件总线
 Vue.prototype.$bus = new Vue()
 Vue.use(ElementUI);
 Vue.config.productionTip = false

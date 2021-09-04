@@ -12,6 +12,7 @@ export default {
   components: { MainTabBar },
   created() {},
   computed: {
+    // 允许在下面四个路由显示TabBar
     show() {
       return (
         this.$route.path.indexOf("/main") != -1 ||

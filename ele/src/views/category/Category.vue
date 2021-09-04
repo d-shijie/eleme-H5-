@@ -87,10 +87,10 @@
       <div class="activities">
         <header>商家属性</header>
         <span
-          :data-bgc="false"
+          data-bool="false"
           ref="activity"
-          :class="{ bgc: activityCurrentIndex === index }"
-          @click="activity(item, index)"
+          :class="{ bgc: item.bool }"
+          @click="activity(item)"
           class="activity"
           v-for="(item, index) in activities"
           :key="index"
@@ -128,18 +128,18 @@ export default {
   components: { NavBar, ShopList },
   data() {
     return {
-      latitude: "",
-      longitude: "",
-      shops: [],
-      showLeft: false,
-      showCenter: false,
-      showRight: false,
-      leftText: "分类",
-      category: [],
-      subCategory: [],
-      currentIndex: "",
-      restaurant_category_id: "",
-      restaurant_category_ids: [],
+      latitude: "",//位置信息
+      longitude: "",//位置信息
+      shops: [],//获得店铺数量
+      showLeft: false,//是否显示分类筛选
+      showCenter: false,//是否显示排序筛选
+      showRight: false,//是否显示其他筛选
+      leftText: "分类",//分类筛选标题信息
+      category: [],//一类分类数目
+      subCategory: [],// 二类分类数目
+      currentIndex: "",//控制一类分类的样式
+      restaurant_category_id: "",//餐馆分类id
+      restaurant_category_ids: [],// 餐馆分类id
       orderWays: [
         "起送价",
         "配送速度",
@@ -147,17 +147,17 @@ export default {
         "智能排序",
         "距离最近",
         "销量最高",
-      ],
-      order_by: 4,
-      deliveryWays: [],
-      activities: [],
-      delivery_mode: [],
-      support_ids: [],
-      deliveryCurrentIndex: "",
-      activityCurrentIndex: "",
+      ],// 排序标题
+      order_by: 4,//默认排序id
+      deliveryWays: [],//派送方式
+      activities: [],// 商家活动
+      delivery_mode: [],//派送方式id
+      support_ids: [],//商家活动id
+      deliveryCurrentIndex: "",//控制派送样式
     };
   },
   created() {
+    // 获取位置信息和餐馆
     getCityDetail(this.$store.state.geohash)
       .then((res) => {
         this.latitude = res.data.latitude;
@@ -167,6 +167,7 @@ export default {
       .catch((err) => {
         console.log(err);
       });
+      //获取分类
     getCategory()
       .then((res) => {
         this.category = res.data;
@@ -178,31 +179,34 @@ export default {
     this.getDeliveryWay();
   },
   methods: {
+    // 获取商家活动
     getActivity() {
       getActivity()
         .then((res) => {
+          for (var i = 0; i < res.data.length - 1; i++) {
+            res.data[i].bool = false;
+          }
           this.activities = res.data;
-
-          console.log(res);
         })
         .catch((err) => {
           console.log(err);
         });
     },
+    // 获取派送方式
     getDeliveryWay() {
       getDeliveryWay()
         .then((res) => {
           this.deliveryWays = res.data;
-
-          console.log(res);
         })
         .catch((err) => {
           console.log(err);
         });
     },
+
     back() {
       this.$router.back();
     },
+   
     getFoodShops(latitude, longitude, id) {
       getFoodShops(latitude, longitude, id)
         .then((res) => {
@@ -212,6 +216,7 @@ export default {
           console.log(err);
         });
     },
+    // 点击分类改变样式 得到餐馆一级id 获取二级分类
     sub(item, index) {
       this.restaurant_category_id = item.id;
       this.subCategory = item.sub_categories;
@@ -222,6 +227,7 @@ export default {
       this.showCenter = false;
       this.showRight = false;
     },
+    // 只按照分类条件获得餐馆
     getShops(item) {
       this.leftText = item.name;
       this.$store.commit("setCategoryName", item.name);
@@ -246,6 +252,7 @@ export default {
       this.showLeft = false;
       this.showRight = false;
     },
+    // 按派送方式获取餐馆 因为派送id可选1，2，3，4，5 分别排序好渲染遍历下标值
     getOrderShops(index) {
       this.order_by = index + 1;
       getFoodShops(
@@ -268,6 +275,7 @@ export default {
       this.showCenter = false;
       this.showLeft = false;
     },
+    // 点击派送方式将id加入delivery_mode
     delivery(item, index) {
       if (this.deliveryCurrentIndex === index) {
         this.delivery_mode = [];
@@ -277,20 +285,26 @@ export default {
         this.deliveryCurrentIndex = index;
       }
     },
-    activity(item, index) {
-      if (this.activityCurrentIndex === index) {
-        this.support_ids.pop();
-        this.activityCurrentIndex = "";
-      } else {
+    // 将活动id加入support_ids
+    activity(item) {
+      if (item.bool === false) {
         this.support_ids.push(item.id);
-        this.activityCurrentIndex = index;
+        item.bool = true;
+      } else {
+        let index = this.support_ids.findIndex((value) => {
+          return value === item.id;
+        });
+        this.support_ids.splice(index, 1);
+        item.bool = false;
       }
     },
     clear() {
       this.delivery_mode = [];
       this.support_ids = [];
       this.deliveryCurrentIndex = "";
-      this.activityCurrentIndex = "";
+      for (let i in this.activities) {
+        this.activities[i].bool = false;
+      }
     },
     getChoiseShops() {
       getFoodShops(

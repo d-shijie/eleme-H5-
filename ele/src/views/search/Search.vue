@@ -16,23 +16,8 @@
         >搜索</el-button
       >
     </div>
-    <div class="cities">
-      <div
-        @click="gotoMain(item)"
-        class="item"
-        v-for="(item, index) in shops"
-        :key="index"
-      >
-        <img :src="shopImgUrl + item.image_path" alt="" />
-        <span>
-          <div class="name">{{ item.name }}</div>
-          <div class="count">月售{{ item.recent_order_num }}</div>
-          <div class="distance">
-            {{ item.float_minimum_order_amount }}元起送/距离{{ item.distance }}
-          </div>
-        </span>
-      </div>
-    </div>
+    <shop-list :shops="shops"></shop-list>
+
     <div v-if="show" class="search-history">
       <header>搜索历史</header>
       <div
@@ -51,8 +36,9 @@
 <script>
 import NavBar from "../../components/navbar/NavBar.vue";
 import { getSearchShops } from "../../axios/getFoods";
+import ShopList from "../../components/shopList/ShopList.vue";
 export default {
-  components: { NavBar },
+  components: { NavBar, ShopList },
   data() {
     return {
       keyword: "",

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive>
+    <keep-alive exclude="Shop">
       <router-view></router-view>
     </keep-alive>
     <main-tab-bar v-if="show"></main-tab-bar>

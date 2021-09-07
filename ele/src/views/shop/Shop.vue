@@ -22,13 +22,16 @@
         >
       </div>
     </div>
-    <router-view></router-view>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 
 <script>
 import { getShopInfo } from "../../axios/getShop";
 export default {
+  name: "Shop",
   data() {
     return {
       shopImgUrl: "//elm.cangdu.org/img/",
@@ -40,7 +43,11 @@ export default {
     getShopInfo(this.$route.params.id)
       .then((res) => {
         this.shopInfo = res.data;
-        console.log(res);
+        this.$store.commit("setDeliveryFee", res.data.float_delivery_fee);
+        this.$store.commit(
+          "setfloat_minimum_order_amount",
+          res.data.float_minimum_order_amount
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -66,6 +73,7 @@ export default {
 .info {
   position: relative;
   width: 100%;
+  z-index: 100;
   padding: 10px 0;
   background: -webkit-linear-gradient(rgb(129, 129, 252), white);
   .el-icon-arrow-left {
@@ -112,6 +120,8 @@ export default {
   }
 }
 .bar {
+  position: relative;
+  z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;

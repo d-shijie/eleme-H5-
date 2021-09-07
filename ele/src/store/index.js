@@ -17,7 +17,9 @@ export default new Vuex.Store({
     showInfoChildren: true,
     address: '',
     showAlert: false,
-    categoryName: ''
+    categoryName: '',
+    shop_delivery_fee:0,
+    float_minimum_order_amount:0
   },
   mutations: {
     setGeoHash(state, geohash) {
@@ -42,6 +44,12 @@ export default new Vuex.Store({
     },
     setCategoryName(state, name) {
       state.categoryName = name
+    },
+    setDeliveryFee(state,fee){
+      state.shop_delivery_fee=fee
+    },
+    setfloat_minimum_order_amount(state,fee){
+      state.float_minimum_order_amount=fee
     }
   },
   actions: {

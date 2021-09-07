@@ -48,3 +48,20 @@ export function getActivity() {
         url: '/shopping/v1/restaurants/activity_attributes',
     })
 }
+export function getFoodList(restaurant_id) {
+    return request({
+        url: '/shopping/v2/menu',
+        params: {
+            restaurant_id
+        },
+        timeout: 10000
+    })
+}
+export function getCommentInfo(restaurant_id, tag_name, offset, limit) {
+    return request({
+        url: '/ugc/v2/restaurants/' + restaurant_id + '/ratings',
+        params: {
+            restaurant_id, tag_name, offset, limit
+        }
+    })
+}

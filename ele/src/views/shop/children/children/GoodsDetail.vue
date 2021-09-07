@@ -1,0 +1,126 @@
+<template>
+  <div ref="good" class="goods-detail">
+    <header>
+      {{ title }}
+    </header>
+    <ul>
+      <li @click="itemClick(item)" v-for="item in foods" :key="item._id">
+        <span class="new">新品</span>
+        <span class="brand">品牌</span>
+        <img :src="imgBaseUrl + item.image_path" alt="" />
+        <div class="info">
+          <div class="name">
+            {{ item.name }}
+          </div>
+          <div class="desc">
+            {{ item.description }}
+          </div>
+          <div class="sell">
+            月售{{ item.month_sales }} 好评率{{ item.satisfy_rate }}%
+          </div>
+          <div class="bottom">
+            <span class="price">￥{{ item.specfoods[0].price }}</span>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    title: {
+      type: String,
+      default: "",
+    },
+    foods: {
+      type: Array,
+      default() {
+        return [];
+      },
+    },
+  },
+  data() {
+    return {
+      imgBaseUrl: "//elm.cangdu.org/img/",
+    };
+  },
+  computed: {},
+  created() {},
+  mounted() {
+    this.getTop();
+  },
+  methods: {
+    itemClick(item) {
+      console.log(item);
+    },
+    getTop() {
+      let top = this.$refs.good.offsetTop;
+      this.$emit("getTop", top);
+    },
+  },
+};
+</script>
+<style scoped lang='less'>
+/* @import url(); 引入css类 */
+.goods-detail {
+  width: 100%;
+}
+header {
+  background-color: #f2f2f2;
+  padding: 10px 0 10px 10px;
+  font-weight: 600;
+  color: #555555;
+}
+ul {
+  .new,
+  .brand {
+    position: absolute;
+    top: 10px;
+    font-size: 6px;
+    display: inline-block;
+    padding: 2px;
+    border: 1px solid rgb(253, 105, 105);
+    border-radius: 10px;
+    color: rgb(253, 105, 105);
+  }
+  .new {
+    left: 160px;
+  }
+  .brand {
+    left: 190px;
+  }
+  li {
+    display: flex;
+    position: relative;
+    padding: 10px;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+    }
+    .info {
+      margin-left: 10px;
+      .name {
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .desc {
+        margin: 5px 0;
+        font-size: 12px;
+      }
+      .sell {
+        font-size: 12px;
+      }
+      .price {
+        font-weight: 600;
+        font-size: 14px;
+        color: rgb(255, 85, 85);
+      }
+    }
+  }
+}
+</style>

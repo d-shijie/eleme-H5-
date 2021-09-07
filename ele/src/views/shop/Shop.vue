@@ -30,6 +30,7 @@
 
 <script>
 import { getShopInfo } from "../../axios/getShop";
+
 export default {
   name: "Shop",
   data() {

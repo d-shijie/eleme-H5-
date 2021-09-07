@@ -4,10 +4,14 @@
       {{ title }}
     </header>
     <ul>
-      <li @click="itemClick(item)" v-for="item in foods" :key="item._id">
+      <li v-for="item in foods" :key="item._id">
         <span class="new">新品</span>
         <span class="brand">品牌</span>
-        <img :src="imgBaseUrl + item.image_path" alt="" />
+        <img
+          @click="itemClick(item)"
+          :src="imgBaseUrl + item.image_path"
+          alt=""
+        />
         <div class="info">
           <div class="name">
             {{ item.name }}
@@ -20,6 +24,9 @@
           </div>
           <div class="bottom">
             <span class="price">￥{{ item.specfoods[0].price }}</span>
+            <span class="add-cart">
+              <add-cart :foods="item.specfoods" :name="item.name" :price='item.specfoods[0].price'></add-cart>
+            </span>
           </div>
         </div>
       </li>
@@ -28,7 +35,10 @@
 </template>
 
 <script>
+import AddCart from "../../../../components/addCart/AddCart.vue";
+
 export default {
+  components: { AddCart },
   props: {
     title: {
       type: String,
@@ -43,6 +53,7 @@ export default {
   },
   data() {
     return {
+      imgUrl: "",
       imgBaseUrl: "//elm.cangdu.org/img/",
     };
   },
@@ -54,6 +65,9 @@ export default {
   methods: {
     itemClick(item) {
       console.log(item);
+      this.$store.commit("setShowViewer", true);
+      this.imgUrl = this.imgBaseUrl + item.image_path;
+      this.$emit("getImgUrl", this.imgUrl);
     },
     getTop() {
       let top = this.$refs.good.offsetTop;
@@ -105,6 +119,10 @@ ul {
     .info {
       margin-left: 10px;
       .name {
+        width: 100px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
         font-weight: 600;
         font-size: 14px;
       }
@@ -114,6 +132,14 @@ ul {
       }
       .sell {
         font-size: 12px;
+      }
+      .bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .add-cart {
+          margin-left: 40px;
+        }
       }
       .price {
         font-weight: 600;

@@ -18,8 +18,13 @@ export default new Vuex.Store({
     address: '',
     showAlert: false,
     categoryName: '',
-    shop_delivery_fee:0,
-    float_minimum_order_amount:0
+    shop_delivery_fee: 0,
+    float_minimum_order_amount: 0,
+    showViewer: false,
+    showDialog: false,
+    goodName: '',
+    atrs: [],
+    goodPrice: 0
   },
   mutations: {
     setGeoHash(state, geohash) {
@@ -45,11 +50,26 @@ export default new Vuex.Store({
     setCategoryName(state, name) {
       state.categoryName = name
     },
-    setDeliveryFee(state,fee){
-      state.shop_delivery_fee=fee
+    setDeliveryFee(state, fee) {
+      state.shop_delivery_fee = fee
     },
-    setfloat_minimum_order_amount(state,fee){
-      state.float_minimum_order_amount=fee
+    setfloat_minimum_order_amount(state, fee) {
+      state.float_minimum_order_amount = fee
+    },
+    setShowViewer(state, bool) {
+      state.showViewer = bool
+    },
+    setShowDialog(state, bool) {
+      state.showDialog = bool
+    },
+    setGoodName(state, name) {
+      state.goodName = name
+    },
+    setGoodAtrs(state, atrs) {
+      state.atrs = atrs
+    },
+    setGoodPrice(state, price) {
+      state.goodPrice = price
     }
   },
   actions: {

@@ -24,7 +24,9 @@ export default new Vuex.Store({
     showDialog: false,
     goodName: '',
     atrs: [],
-    goodPrice: 0
+    goodPrice: 0,
+    cartItems: [],
+    showCartBar: false
   },
   mutations: {
     setGeoHash(state, geohash) {
@@ -70,9 +72,40 @@ export default new Vuex.Store({
     },
     setGoodPrice(state, price) {
       state.goodPrice = price
+    },
+    setCartItem(state, payload) {
+      let product = state.cartItems.find(item => item.id === payload.id)
+      if (!product) {
+        state.cartItems.push(payload)
+      } else {
+        product.foods.push(payload.foods[0])
+      }
+    },
+    clearCart(state, id) {
+      let index = state.cartItems.findIndex(item => item.id === id)
+      state.cartItems.splice(index, 1)
+    },
+    setShowCartBar(state, bool) {
+      state.showCartBar = bool
+    },
+    subCart(state, payload) {
+      let index = state.cartItems.findIndex(item => item.id === payload.id)
+      let foodIndex = state.cartItems[index].foods.findIndex(item => item.food_id === payload.food_id)
+      state.cartItems[index].foods.splice(foodIndex, 1)
     }
   },
   actions: {
+  },
+  getters: {
+    price: (state) => (id) => {
+      if (state.cartItems === []) {
+        return 0
+      }
+      return state.cartItems.find(item => item.id === id)
+        .foods.reduce((pre, item) => {
+          return pre + item.price
+        }, 0)
+    }
   },
   modules: {
   }

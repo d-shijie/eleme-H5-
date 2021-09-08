@@ -1,6 +1,10 @@
 <template>
   <div class="add-cart">
-    <span v-if="foods.length === 1" class="el-icon-circle-plus-outline"></span>
+    <span
+      @click="add"
+      v-if="foods.length === 1"
+      class="el-icon-circle-plus-outline"
+    ></span>
     <span @click="showDialog" v-else class="add">选规格</span>
   </div>
 </template>
@@ -8,9 +12,9 @@
 <script>
 export default {
   props: {
-    price:{
-      type:Number,
-      default:0
+    price: {
+      type: Number,
+      default: 0,
     },
     name: {
       type: String,
@@ -24,15 +28,35 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      food: {},
+      goods: [],
+    };
   },
   created() {},
   methods: {
+    add() {
+      this.food = this.foods[0];
+      let payload = {};
+      // let product = this.goods.find(
+      //   (item) => item.food_id === this.food.food_id
+      // );
+      // if (product) {
+      //   this.food.count += 1;
+      // } else {
+      //   this.food.count = 1;
+
+      // }
+      this.goods.push(this.food);
+      payload.id = this.$route.params.id;
+      payload.foods = this.goods;
+      this.$store.commit("setCartItem", payload);
+    },
     showDialog() {
-      this.$store.commit("setGoodName",this.name );
+      this.$store.commit("setGoodName", this.name);
       this.$store.commit("setGoodAtrs", this.foods);
       this.$store.commit("setShowDialog", true);
-      this.$store.commit('setGoodPrice',this.price)
+      this.$store.commit("setGoodPrice", this.price);
     },
   },
 };

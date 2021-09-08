@@ -7,7 +7,7 @@
       <div class="btns">
         <span
           :class="{ active: currentIndex === index }"
-          @click="itemClick(index)"
+          @click="itemClick(item, index)"
           v-for="(item, index) in $store.state.atrs"
           :key="index"
         >
@@ -19,7 +19,7 @@
       <span class="price">
         ￥<i>{{ $store.state.goodPrice }}</i>
       </span>
-      <span class="add"> 加入购物车 </span>
+      <span class="add" @click="add"> 加入购物车 </span>
     </div>
   </div>
 </template>
@@ -37,15 +37,34 @@ export default {
   data() {
     return {
       currentIndex: 0,
+      food: {},
+      goods: [],
     };
   },
+  activated() {},
   created() {},
   methods: {
-    itemClick(index) {
+    itemClick(item, index) {
+      this.food = item;
       this.currentIndex = index;
     },
     close() {
       this.$store.commit("setShowDialog", false);
+    },
+    add() {
+      let payload = {};
+      // let product = this.goods.find(
+      //   (item) => item.food_id === this.food.food_id
+      // );
+      // if (product) {
+      //   this.food.count += 1;
+      // } else {
+      //   this.food.count = 1;
+      // }
+      this.goods.push(this.food);
+      payload.id = this.$route.params.id;
+      payload.foods = this.goods;
+      this.$store.commit("setCartItem", payload);
     },
   },
 };

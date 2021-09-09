@@ -2,7 +2,7 @@
   <div class="city">
     <nav-bar>
       <div @click="refresh" class="el-icon-platform-eleme" slot="left"></div>
-      <div class="center" slot="center">请使用软件内返回按钮</div>
+      <div class="center" slot="center">城市</div>
       <div @click="gotoProfile" class="el-icon-user" slot="right"></div>
     </nav-bar>
     <div class="hot-cities">

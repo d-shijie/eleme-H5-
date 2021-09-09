@@ -24,6 +24,7 @@ const Goods = () => import('../views/shop/children/Goods.vue')
 const Comments = () => import('../views/shop/children/Comments.vue')
 const ConfirmOrder = () => import('../views/confirmOrder/ConfirmOrder.vue')
 const PayMent = () => import('../views/payMent/PayMent.vue')
+const OrderDetail = () => import('../views/order/OrderDetail.vue')
 Vue.use(VueRouter)
 
 const routes = [
@@ -49,8 +50,15 @@ const routes = [
   },
   {
     path: "/order",
-    component: Order
+    component: Order,
+    children: [
+      {
+        path: 'orderDetail',
+        component: OrderDetail
+      },
+    ]
   },
+
   {
     path: '/profile',
     component: Profile
@@ -133,7 +141,8 @@ const routes = [
   {
     path: '/confirmOrder/:id/payment',
     component: PayMent
-  }
+  },
+
 ]
 
 const router = new VueRouter({

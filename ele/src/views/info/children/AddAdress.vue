@@ -78,7 +78,8 @@ export default {
     },
     add() {
       addAddress(window.localStorage.getItem("user_id"), this.queryInfo)
-        .then(() => {
+        .then((res) => {
+          console.log(res);
           this.$router.back();
         })
         .catch((err) => {

@@ -2,6 +2,7 @@
   <div class="city">
     <nav-bar>
       <div @click="refresh" class="el-icon-platform-eleme" slot="left"></div>
+      <div class="center" slot="center">请使用软件内返回按钮</div>
       <div @click="gotoProfile" class="el-icon-user" slot="right"></div>
     </nav-bar>
     <div class="hot-cities">
@@ -16,6 +17,10 @@
         </li>
       </ul>
     </div>
+    <alert>
+      <div class="el-icon-warning-outline" slot="top"></div>
+      <div class="mid" slot="mid">未登录</div>
+    </alert>
     <city-item first="A" :cities="allCities.A"></city-item>
     <city-item first="B" :cities="allCities.B"></city-item>
     <city-item first="C" :cities="allCities.C"></city-item>
@@ -46,6 +51,7 @@
 import NavBar from "../../components/navbar/NavBar.vue";
 import CityItem from "./CityItem.vue";
 import { getCities } from "../../axios/getCities";
+import Alert from "../../components/alert/Alert.vue";
 export default {
   data() {
     return {
@@ -56,6 +62,7 @@ export default {
   components: {
     NavBar,
     CityItem,
+    Alert,
   },
   created() {
     getCities("hot")
@@ -78,7 +85,11 @@ export default {
       window.location.reload();
     },
     gotoProfile() {
-      this.$router.push("/profile");
+      if (window.localStorage.getItem("user_id")) {
+        this.$router.push("/profile");
+      } else {
+        this.$store.commit("changeShowAlert", true);
+      }
     },
     goto(id) {
       this.$router.push("/citysearch/" + id);

@@ -26,7 +26,9 @@ export default new Vuex.Store({
     atrs: [],
     goodPrice: 0,
     cartItems: [],
-    showCartBar: false
+    showCartBar: false,
+    cartList: [],
+    showOrder:true
   },
   mutations: {
     setGeoHash(state, geohash) {
@@ -92,9 +94,24 @@ export default new Vuex.Store({
       let index = state.cartItems.findIndex(item => item.id === payload.id)
       let foodIndex = state.cartItems[index].foods.findIndex(item => item.food_id === payload.food_id)
       state.cartItems[index].foods.splice(foodIndex, 1)
+    },
+    addCartList(state) {
+      for (var i = 0; i < state.cartList.length; i++) {
+        state.cartList[i].surplusTime -= 1000
+      }
+    },
+    setShowOrder(state,bool){
+      state.showOrder=bool
     }
   },
   actions: {
+    addCartList(context, payload) {
+      this.state.cartList.push(payload)
+      setInterval(() => {
+        context.commit('addCartList')
+      }, 1000)
+
+    }
   },
   getters: {
     price: (state) => (id) => {

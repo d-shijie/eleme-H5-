@@ -13,13 +13,13 @@
       请 <i @click="gotoProfile">登录</i>
     </div>
     <div v-else class="address">
-      <div class="item" v-for="item in address" :key="item.id">
+      <div class="item">
         <span class="el-icon-location-outline"></span>
         <span class="info">
           <div class="name">
-            {{ item.name }}{{ item.sex | sex }} {{ item.phone }}
+            {{ address.name }}{{ address.sex | sex }} {{ address.phone }}
           </div>
-          <div class="location">{{ item.address }}</div>
+          <div class="location">{{ address.address }}</div>
         </span>
         <span class="el-icon-arrow-right"></span>
       </div>
@@ -81,7 +81,7 @@ export default {
   components: { NavBar, Alert },
   data() {
     return {
-      address: [],
+      address: {},
       deliveryTime: 20,
       imgBaseUrl: "//elm.cangdu.org/img/",
       shopImg: "",
@@ -110,6 +110,15 @@ export default {
       );
       return product;
     },
+    nowTime() {
+      let time = new Date();
+      let y = time.getFullYear();
+      let M = time.getMonth() + 1;
+      let d = time.getDate();
+      let h = time.getHours();
+      let m = time.getMinutes();
+      return y + "-" + M + "-" + d + " " + h + ":" + m;
+    },
     TotalMoney() {
       let money = this.goods.foods.reduce((pre, item) => {
         return pre + item.price;
@@ -132,7 +141,6 @@ export default {
       .then((res) => {
         this.shopName = res.data.name;
         this.shopImg = res.data.image_path;
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -148,7 +156,7 @@ export default {
     getAddress() {
       getAddress(62227)
         .then((res) => {
-          this.address = res.data;
+          this.address = res.data[0];
         })
         .catch((err) => {
           console.log(err);
@@ -156,7 +164,17 @@ export default {
     },
     pay() {
       if (this.showLogin === true) {
-        console.log(1);
+        let payload = {};
+        payload.id=this.$route.params.id
+        payload.foods = this.goods.foods;
+        payload.shopImg = this.imgBaseUrl + this.shopImg;
+        payload.shopName = this.shopName;
+        payload.address = this.address;
+        payload.arriveTime = this.Time;
+        payload.totalMoney = this.TotalMoney;
+        payload.nowTime = this.nowTime;
+        payload.surplusTime = 15 * 60 * 1000;
+        this.$store.dispatch("addCartList", payload);
         this.$router.push(
           "/confirmOrder/" + this.$route.params.id + "/payment"
         );
@@ -190,13 +208,6 @@ export default {
     flex: 25%;
     background-color: rgb(6, 197, 6);
   }
-  // .money{
-  //   flex:1;
-  //   bgc
-  // }
-  // .goto-pay{
-  //   flex:25%;
-  // }
 }
 .other {
   margin-top: 10px;

@@ -22,6 +22,8 @@ const Category = () => import('../views/category/Category.vue')
 const Shop = () => import('../views/shop/Shop.vue')
 const Goods = () => import('../views/shop/children/Goods.vue')
 const Comments = () => import('../views/shop/children/Comments.vue')
+const ConfirmOrder = () => import('../views/confirmOrder/ConfirmOrder.vue')
+const PayMent = () => import('../views/payMent/PayMent.vue')
 Vue.use(VueRouter)
 
 const routes = [
@@ -123,6 +125,14 @@ const routes = [
         component: Comments
       }
     ]
+  },
+  {
+    path: '/confirmOrder/:id',
+    component: ConfirmOrder
+  },
+  {
+    path: '/confirmOrder/:id/payment',
+    component: PayMent
   }
 ]
 

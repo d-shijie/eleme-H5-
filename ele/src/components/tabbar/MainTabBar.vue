@@ -46,14 +46,16 @@ import TabBar from "./TabBar.vue";
 import TabBarItem from "./TabBarItem.vue";
 export default {
   data() {
-    return {};
+    return {
+      geohash: this.$store.state.geohash,
+    };
   },
   computed: {
     mainPath() {
-      return "/main/" + this.$store.state.geohash;
+      return "/main/" + this.geohash;
     },
     searchPath() {
-      return "/search/" + this.$store.state.geohash;
+      return "/search/" + this.geohash;
     },
   },
   created() {},

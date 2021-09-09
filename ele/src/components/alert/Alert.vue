@@ -25,6 +25,7 @@ export default {
   position: fixed;
   left: 50%;
   top: 50%;
+  z-index: 1000;
   transform: translate(-50%, -50%);
   width: 150px;
   border-radius: 10px;
@@ -42,6 +43,7 @@ export default {
     padding: 5px 0;
   }
   .mid {
+    padding: 10px 0;
     text-align: center;
     font-size: 14px;
   }

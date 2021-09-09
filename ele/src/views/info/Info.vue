@@ -87,7 +87,6 @@ export default {
         .then(() => {
           window.localStorage.clear();
           this.$router.push("/profile");
-          window.location.reload();
         })
         .catch((err) => {
           console.log(err);

@@ -60,7 +60,7 @@ export default {
     },
     pay() {
       if (this.price >= this.$store.state.float_minimum_order_amount) {
-        console.log(2);
+        this.$router.push("/confirmOrder/" + this.$route.params.id);
       } else {
         this.text = this.$store.state.float_minimum_order_amount - this.price;
         this.$store.commit("changeShowAlert", true);

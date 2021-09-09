@@ -33,7 +33,10 @@
               <span class="money">￥{{ item.totalMoney }}</span>
             </div>
             <div class="bottom">
-              <el-button type="primary" size="mini" @click="payOnce(item)"
+              <el-button
+                type="primary"
+                size="mini"
+                @click="payOnce($event, item)"
                 >再来一单</el-button
               >
             </div>
@@ -55,6 +58,9 @@ export default {
       item: {},
     };
   },
+  destroyed() {
+    this.$store.commit("setShowOrder", true);
+  },
   created() {
     setTimeout(() => {
       this.loading = false;
@@ -72,11 +78,13 @@ export default {
       }
     },
   },
+
   methods: {
     back() {
       this.$router.back();
     },
-    payOnce(item) {
+    payOnce(e, item) {
+      e.stopPropagation();
       this.$router.push("/shop/" + item.id);
     },
     gotoDetail(item) {

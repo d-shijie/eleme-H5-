@@ -61,12 +61,12 @@ export default {
   components: { NavBar, Alert },
   data() {
     return {
-      codeImg: "",
+      codeImg: "", //验证码图片
       queryInfo: {
         username: "dsj",
         password: "123456",
         captcha_code: null,
-      },
+      }, //登录信息
       rules: {
         username: [
           { required: true, message: "请输入账号", trigger: "blur" },
@@ -89,14 +89,15 @@ export default {
         captcha_code: [
           { required: true, message: "请输入验证码", trigger: "blur" },
         ],
-      },
-      userInfo: {},
+      }, //表单验证
+      userInfo: {}, //用户信息
     };
   },
   created() {
     this.getCaptchas();
   },
   methods: {
+    // 获取验证码
     getCaptchas() {
       getCaptchas()
         .then((res) => {
@@ -109,6 +110,7 @@ export default {
     back() {
       this.$router.back();
     },
+    //登录 有时浏览器无法携带cookie发送 导致验证码失效问题
     login() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
@@ -118,15 +120,15 @@ export default {
               this.userInfo.balance = res.data.balance;
               this.userInfo.discount = res.data.gift_amount;
               this.userInfo.integral = res.data.point;
-              window.localStorage.setItem(
-                "user_id",
-                JSON.stringify(res.data.id)
-              );
-              this.$store.commit("setUserInfo", this.userInfo);
               console.log(res);
               if (res.data.status === 0) {
                 this.$store.commit("changeShowAlert", true);
               } else {
+                this.$store.commit("setUserInfo", this.userInfo);
+                window.localStorage.setItem(
+                  "user_id",
+                  JSON.stringify(res.data.id)
+                );
                 this.$router.push("/profile");
               }
             })
@@ -142,6 +144,7 @@ export default {
         }
       });
     },
+    // 切换验证码
     shift() {
       this.getCaptchas();
     },

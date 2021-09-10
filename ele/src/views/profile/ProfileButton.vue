@@ -12,11 +12,11 @@ export default {
     path: {
       type: String,
       default: "",
-    },
+    },//跳转路径
     showBorder: {
       type: Boolean,
       default: true,
-    },
+    },//是否显示边框
   },
   data() {
     return {};

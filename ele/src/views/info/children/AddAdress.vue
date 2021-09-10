@@ -54,17 +54,17 @@ export default {
   data() {
     return {
       queryInfo: {
-        name: "",
-        address: this.$store.state.address,
-        address_detail: "",
-        phone: "",
-        phone_bk: "",
+        name: "",// 名字
+        address: this.$store.state.address,// 地址
+        address_detail: "",//详细地址
+        phone: "",// 手机号
+        phone_bk: "",// 备用手机号
         user_id: 0,
         tag: "美食",
         sex: 1,
         tag_type: 2,
         geohash: this.$store.state.geohash,
-      },
+      },// 添加地址所需传入参数
     };
   },
   created() {},
@@ -76,6 +76,7 @@ export default {
     goto() {
       this.$router.push("addDetail");
     },
+    // 添加地址
     add() {
       addAddress(window.localStorage.getItem("user_id"), this.queryInfo)
         .then((res) => {

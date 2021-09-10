@@ -39,18 +39,19 @@ export default {
   components: { NavBar },
   data() {
     return {
-      value: "",
-      keyword: "",
+      value: "",// 下拉框input显示内容
+      keyword: "",// 搜索关键字
       options: [
         {
           label: "热门城市",
           hotCities: [],
         },
-      ],
+      ],// 下拉框数据
       cities: [],
     };
   },
   created() {
+    // 获取城市列表
     getCities("hot")
       .then((res) => {
         this.options[0].hotCities = res.data;
@@ -63,6 +64,7 @@ export default {
     back() {
       this.$router.back();
     },
+    // 搜索到的地址
     search(id) {
       getCityLocation(id, this.value)
         .then((res) => {

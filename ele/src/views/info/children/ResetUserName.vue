@@ -15,7 +15,7 @@ export default {
   components: { NavBar },
   data() {
     return {
-      value: "",
+      value: "",//用户名
     };
   },
   created() {},

@@ -46,10 +46,10 @@ export default {
   components: { GoodsDetail, BottomButton, Scroll, AddCartDialog },
   data() {
     return {
-      titles: [],
-      currentIndex: 0,
-      tops: [],
-      imgUrl: "",
+      titles: [],//商品分类标题
+      currentIndex: 0,//控制商品分类标题样式
+      tops: [],//右侧各高度
+      imgUrl: "",//商品图片
     };
   },
   created() {
@@ -63,9 +63,11 @@ export default {
     getImgUrl(url) {
       this.imgUrl = url;
     },
+    //将高度传入tops
     getTop(top) {
       this.tops.push(top);
     },
+    //获取商品列表
     getFoodList() {
       getFoodList(this.$route.params.id)
         .then((res) => {
@@ -75,6 +77,7 @@ export default {
           console.log(err);
         });
     },
+    //点击title改变右侧对应高度 左右两边都由index控制
     itemClick(index) {
       this.currentIndex = index;
       let good = document.querySelector(".good-right");

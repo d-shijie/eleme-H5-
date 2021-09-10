@@ -20,6 +20,7 @@ export default {
     return {};
   },
   computed: {
+    // 与商铺id相同的订单
     goods() {
       return this.$store.state.cartItems.find(
         (item) => item.id === this.$route.params.id
@@ -28,10 +29,12 @@ export default {
   },
   created() {},
   methods: {
+    //清除与当前id先同的订单列表中的订单
     clear() {
       this.$store.commit("clearCart", this.$route.params.id);
       this.$store.commit("setShowCartBar", false);
     },
+    // 清除一个订单
     sub(id) {
       this.$store.commit("subCart", { id: this.$route.params.id, food_id: id });
     },

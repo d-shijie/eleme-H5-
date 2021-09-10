@@ -35,12 +35,13 @@ export default {
   name: "Shop",
   data() {
     return {
-      shopImgUrl: "//elm.cangdu.org/img/",
-      shopInfo: {},
-      isActive: true,
+      shopImgUrl: "//elm.cangdu.org/img/",//商家logo基本图片
+      shopInfo: {},//商家信息
+      isActive: true,//控制商品和评价样式
     };
   },
   created() {
+    // 获取商铺信息
     getShopInfo(this.$route.params.id)
       .then((res) => {
         this.shopInfo = res.data;

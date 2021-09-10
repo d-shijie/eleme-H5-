@@ -23,13 +23,14 @@ export default {
   components: { NavBar },
   data() {
     return {
-      address: [],
+      address: [],//用户地址
     };
   },
   created() {
     this.getAddress();
   },
   methods: {
+    // 获取用户地址
     getAddress() {
       getAddress(window.localStorage.getItem("user_id"))
         .then((res) => {
@@ -46,6 +47,7 @@ export default {
     add() {
       this.$router.push("add");
     },
+    // 删除地址
     deleteAddress(address_id) {
       deleteAddress(window.localStorage.getItem("user_id"), address_id)
         .then(() => {

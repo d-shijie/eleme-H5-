@@ -42,22 +42,25 @@ export default {
   components: { NavBar, ShopList },
   data() {
     return {
-      cityInfo: {},
-      foodCategory: [],
-      shops: [],
-      cateImgUrl: "https://fuss10.elemecdn.com/",
-      currentIndex: 0,
+      cityInfo: {}, //地址信息
+      foodCategory: [], // 餐馆分类信息
+      shops: [], //首页商铺
+      cateImgUrl: "https://fuss10.elemecdn.com/", //分类信息图片基本地址
+      currentIndex: 0, //控制banner圆点样式
     };
   },
   computed: {
+    // 返回banner圆点数量
     pointCount() {
       return this.foodCategory.length / 8;
     },
   },
   created() {
+    // 获取地址信息
     getCityDetail(this.$route.params.geohash)
       .then((res) => {
         this.cityInfo = res.data;
+        // 获取首页店铺
         getFoodShops(res.data.latitude, res.data.longitude)
           .then((res) => {
             this.shops = res.data;
@@ -69,6 +72,7 @@ export default {
       .catch((err) => {
         console.log(err);
       });
+    // 获取餐馆分类
     getFoodCategory()
       .then((res) => {
         this.foodCategory = res.data;
@@ -81,6 +85,7 @@ export default {
     goto(path) {
       this.$router.push(path);
     },
+    // 控制banner的位置已显示
     shift() {
       let box = document.querySelector(".box");
       switch (this.currentIndex) {

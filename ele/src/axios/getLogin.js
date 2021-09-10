@@ -1,10 +1,12 @@
 import { request } from './request'
+// 获取验证码
 export function getCaptchas() {
     return request({
         url: "/v1/captchas",
         method: 'post'
     })
 }
+//登录
 export function login(query) {
     return request({
         url: "/v2/login",
@@ -12,6 +14,7 @@ export function login(query) {
         data: query
     })
 }
+// 管理员登录
 export function getAdminLogin(query) {
     return request({
         url: '/admin/login',
@@ -19,11 +22,13 @@ export function getAdminLogin(query) {
         data: query
     })
 }
+//退出登录
 export function loginout() {
     return request({
         url: "/v2/signout"
     })
 }
+// 添加用户地址
 export function addAddress(id, query) {
     return request({
         url: '/v1/users/' + id + '/addresses',
@@ -31,6 +36,7 @@ export function addAddress(id, query) {
         data: query
     })
 }
+// 获取用户地址
 export function getAddress(user_id) {
     return request({
         url: '/v1/users/' + user_id + '/addresses',
@@ -39,12 +45,14 @@ export function getAddress(user_id) {
         }
     })
 }
+// 删除用户地址
 export function deleteAddress(id, address_id) {
     return request({
         url: '/v1/users/' + id + '/addresses/' + address_id,
         method: 'delete'
     })
 }
+// 修改密码
 export function changePssword(queryInfo) {
     return request({
         url: '/v2/changepassword',

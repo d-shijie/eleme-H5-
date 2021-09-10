@@ -53,7 +53,7 @@ export default {
   },
   data() {
     return {
-      imgUrl: "",
+      imgUrl: "",//图片地址
       imgBaseUrl: "//elm.cangdu.org/img/",
     };
   },
@@ -63,12 +63,13 @@ export default {
     this.getTop();
   },
   methods: {
+    // 图片预览
     itemClick(item) {
-      console.log(item);
       this.$store.commit("setShowViewer", true);
       this.imgUrl = this.imgBaseUrl + item.image_path;
       this.$emit("getImgUrl", this.imgUrl);
     },
+    // 获取元素距离顶部距离 传入父组件
     getTop() {
       let top = this.$refs.good.offsetTop;
       this.$emit("getTop", top);

@@ -54,19 +54,22 @@ export default {
   components: { NavBar },
   data() {
     return {
-      loading: true,
-      item: {},
+      loading: true,// 页面加载
+      item: {},//订单项
     };
   },
   destroyed() {
+    //显示订单页
     this.$store.commit("setShowOrder", true);
   },
   created() {
+    // 页面加载时间
     setTimeout(() => {
       this.loading = false;
     }, 1000);
   },
   filters: {
+    // 剩余支付时间
     surplusTime(value) {
       if (value === 0) {
         return "支付超时";
@@ -83,6 +86,7 @@ export default {
     back() {
       this.$router.back();
     },
+    // 点击再来一单触发冒泡跳转错误页面 阻止冒泡
     payOnce(e, item) {
       e.stopPropagation();
       this.$router.push("/shop/" + item.id);

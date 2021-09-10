@@ -38,13 +38,13 @@ export default {
       type: Array,
       default() {
         return [];
-      },
+      },//商铺列表
     },
   },
   data() {
     return {
       cateImgUrl: "https://fuss10.elemecdn.com/",
-      shopImgUrl: "//elm.cangdu.org/img/",
+      shopImgUrl: "//elm.cangdu.org/img/",//商铺logo地址
     };
   },
   created() {},

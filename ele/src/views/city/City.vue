@@ -55,16 +55,17 @@ import Alert from "../../components/alert/Alert.vue";
 export default {
   data() {
     return {
-      hotCities: [],
-      allCities: [],
+      hotCities: [], //热门城市
+      allCities: [], //所有城市w
     };
   },
   components: {
     NavBar,
     CityItem,
-    Alert,
+    Alert, //弹出框
   },
   created() {
+    // 获取热门城市列表
     getCities("hot")
       .then((res) => {
         this.hotCities = res.data;
@@ -72,6 +73,8 @@ export default {
       .catch((err) => {
         console.log(err);
       });
+
+    //获取所有城市列表 结果返回对象
     getCities("group")
       .then((res) => {
         this.allCities = res.data;
@@ -84,6 +87,7 @@ export default {
     refresh() {
       window.location.reload();
     },
+    // 根据是否登录进行跳转
     gotoProfile() {
       if (window.localStorage.getItem("user_id")) {
         this.$router.push("/profile");

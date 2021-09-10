@@ -55,19 +55,20 @@ export default {
   data() {
     return {
       queryInfo: {
-        username: "",
-        oldpassWord: "",
-        newpassword: "",
-        confirmpassword: "",
-        captcha_code: "",
+        username: "",//用户名
+        oldpassWord: "",//旧密码
+        newpassword: "",// 新密码
+        confirmpassword: "",// q确认密码
+        captcha_code: "",//验证码
       },
-      codeImg: "",
+      codeImg: "",//验证码图片
     };
   },
   created() {
     this.getCaptchas();
   },
   methods: {
+    //获取验证码
     getCaptchas() {
       getCaptchas()
         .then((res) => {
@@ -81,6 +82,7 @@ export default {
       this.$store.commit("changeShowInfoChildren", true);
       this.$router.back();
     },
+    // 重置密码
     reset() {
       changePssword(this.queryInfo)
         .then((res) => {
@@ -95,6 +97,7 @@ export default {
           console.log(err);
         });
     },
+    //切换验证码
     shift() {
       this.getCaptchas();
     },

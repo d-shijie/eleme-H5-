@@ -81,11 +81,11 @@ export default {
   components: { NavBar, Alert },
   data() {
     return {
-      address: {},
-      deliveryTime: 20,
-      imgBaseUrl: "//elm.cangdu.org/img/",
-      shopImg: "",
-      shopName: "",
+      address: {}, //用户第一个地址
+      deliveryTime: 20, //配送时间 接口处未找到 写死
+      imgBaseUrl: "//elm.cangdu.org/img/", // 商家logo基本地址
+      shopImg: "", // 商家地址
+      shopName: "", // 商家名称
     };
   },
   computed: {
@@ -96,6 +96,7 @@ export default {
         return false;
       }
     },
+    // 当前时间的20分钟后
     Time() {
       let time = new Date().getTime();
       let willTime = parseInt(time) + 20 * 1000 * 60;
@@ -104,6 +105,7 @@ export default {
       let m = date.getMinutes();
       return h + ":" + m;
     },
+    // 与当前商铺id相同的订单
     goods() {
       let product = this.$store.state.cartItems.find(
         (item) => item.id === this.$route.params.id
@@ -119,6 +121,7 @@ export default {
       let m = time.getMinutes();
       return y + "-" + M + "-" + d + " " + h + ":" + m;
     },
+    // 当前列表中所有食品的价格+餐盒费写死+配送费
     TotalMoney() {
       let money = this.goods.foods.reduce((pre, item) => {
         return pre + item.price;
@@ -137,6 +140,7 @@ export default {
   },
   created() {
     this.getAddress();
+    // 获取商家信息
     getShopInfo(this.$route.params.id)
       .then((res) => {
         this.shopName = res.data.name;
@@ -153,8 +157,9 @@ export default {
     gotoProfile() {
       this.$router.push("/profile");
     },
+    // 获取用户地址
     getAddress() {
-      getAddress(62227)
+      getAddress(window.localStorage.getItem("user_id"))
         .then((res) => {
           this.address = res.data[0];
         })
@@ -162,10 +167,11 @@ export default {
           console.log(err);
         });
     },
+    // 将订单传入购物车列表
     pay() {
       if (this.showLogin === true) {
         let payload = {};
-        payload.id=this.$route.params.id
+        payload.id = this.$route.params.id;
         payload.foods = this.goods.foods;
         payload.shopImg = this.imgBaseUrl + this.shopImg;
         payload.shopName = this.shopName;
@@ -174,6 +180,7 @@ export default {
         payload.totalMoney = this.TotalMoney;
         payload.nowTime = this.nowTime;
         payload.surplusTime = 15 * 60 * 1000;
+        // 异步操作 定时器记录过期时间
         this.$store.dispatch("addCartList", payload);
         this.$router.push(
           "/confirmOrder/" + this.$route.params.id + "/payment"

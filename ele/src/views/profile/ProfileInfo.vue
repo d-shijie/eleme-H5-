@@ -1,4 +1,5 @@
 <template>
+<!-- profile页的余额积分红包等 -->
   <div class="profile-info">
     <div class="count">
       <i>{{ count }}</i> {{ unit }}
@@ -13,15 +14,15 @@ export default {
     count: {
       type: Number,
       defalut: 0,
-    },
+    },//数量
     unit: {
       type: String,
       default: "",
-    },
+    },//单位
     desc: {
       type: String,
       defalut: "",
-    },
+    },//描述
   },
   data() {
     return {};

@@ -31,7 +31,7 @@ export default {
       type: Array,
       default() {
         return [];
-      },
+      },//商品规格
     },
   },
   data() {
@@ -48,19 +48,13 @@ export default {
       this.food = item;
       this.currentIndex = index;
     },
+    // 关闭弹出框
     close() {
       this.$store.commit("setShowDialog", false);
     },
+    //添加商品
     add() {
       let payload = {};
-      // let product = this.goods.find(
-      //   (item) => item.food_id === this.food.food_id
-      // );
-      // if (product) {
-      //   this.food.count += 1;
-      // } else {
-      //   this.food.count = 1;
-      // }
       this.goods.push(this.food);
       payload.id = this.$route.params.id;
       payload.foods = this.goods;

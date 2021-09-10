@@ -54,7 +54,7 @@ export default {
       type: Object,
       default() {
         return {};
-      },
+      },//订单信息
     },
   },
   components: { NavBar },
@@ -62,6 +62,7 @@ export default {
     return {};
   },
   filters: {
+    // 剩余支付时间
     surplusTime(value) {
       if (value === 0) {
         return "支付超时";

@@ -41,12 +41,13 @@ export default {
   components: { NavBar, ShopList },
   data() {
     return {
-      keyword: "",
-      shops: [],
+      keyword: "",//搜索关键字
+      shops: [],//搜索到的店铺
       shopImgUrl: "//elm.cangdu.org/img/",
     };
   },
   computed: {
+    // 搜索历史
     searchHistory() {
       return JSON.parse(window.localStorage.getItem("searchHistory"));
     },
@@ -59,6 +60,7 @@ export default {
     back() {
       this.$router.back();
     },
+    // 搜索商铺 将搜索记录存入localStorage
     search() {
       getSearchShops(this.$route.params.geohash, this.keyword)
         .then((res) => {
@@ -72,7 +74,7 @@ export default {
             let arr = JSON.parse(window.localStorage.getItem("searchHistory"));
             let newArr = arr.push(this.keyword);
             newArr = arr;
-            for (var i = 0; i < newArr.length - 1; i++) {
+            for (var i = 0; i < newArr.length; i++) {
               if (newArr[i] !== this.keyword) {
                 window.localStorage.setItem(
                   "searchHistory",
@@ -86,6 +88,7 @@ export default {
           console.log(err);
         });
     },
+    // 点击搜索历史 item直接为关键字
     itemClick(item) {
       this.search(this.$route.params.geohash, item);
     },

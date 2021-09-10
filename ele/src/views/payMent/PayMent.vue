@@ -45,10 +45,10 @@ import NavBar from "../../components/navbar/NavBar.vue";
 export default {
   data() {
     return {
-      myTime: 30 * 60 * 1000,
-      timer: null,
-      text: "",
-      currentIndex: 1,
+      myTime: 30 * 60 * 1000,//剩余支付时间时间戳
+      timer: null,//定时器
+      text: "",//提示信息
+      currentIndex: 1,// 控制支付方式样式
     };
   },
   components: {
@@ -56,6 +56,7 @@ export default {
     Alert,
   },
   computed: {
+    // 时间戳转换
     time() {
       let date = new Date(this.myTime);
       const m = (date.getMinutes() + "").padStart(2, "0");
@@ -64,6 +65,7 @@ export default {
     },
   },
   created() {
+    // 开启定时器与关闭
     if (this.myTime > 0) {
       this.text = "暂不开放支付功能";
       this.$store.commit("changeShowAlert", true);

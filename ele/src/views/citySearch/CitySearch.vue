@@ -52,9 +52,9 @@ import { getCityInfo, getCityLocation } from "../../axios/getCities";
 export default {
   data() {
     return {
-      cityInfo: {},
-      keyword: "",
-      cities: [],
+      cityInfo: {},// 所选城市信息
+      keyword: "",// 搜索关键字
+      cities: [],// 搜索到的地址
     };
   },
   components: {
@@ -64,11 +64,13 @@ export default {
     showHistory() {
       return window.localStorage.getItem("placeHistory");
     },
+    // 将localStorage存储的字符串解析为JSON格式
     placeHistory() {
       return JSON.parse(window.localStorage.getItem("placeHistory"));
     },
   },
   created() {
+    // 获取地址信息
     getCityInfo(this.$route.params.id)
       .then((res) => {
         this.cityInfo = res.data;
@@ -84,11 +86,13 @@ export default {
     back() {
       this.$router.back();
     },
+    // 添加搜索记录
     gotoMain(item) {
       let placeHistory = window.localStorage.getItem("placeHistory");
       if (!placeHistory) {
         window.localStorage.setItem("placeHistory", JSON.stringify([item]));
       } else {
+        // 每搜索一个地址添加一个搜索记录 localStorage只能存储字符串
         let newPlaceHistory =
           placeHistory.substring(0, placeHistory.length - 1) +
           "," +
@@ -99,6 +103,7 @@ export default {
       this.$store.commit("setGeoHash", item.geohash);
       this.$router.push("/main/" + item.geohash);
     },
+    // 搜索地址
     search() {
       getCityLocation(this.$route.params.id, this.keyword)
         .then((res) => {
@@ -108,9 +113,11 @@ export default {
           console.log(err);
         });
     },
+    // 清除input
     clear() {
       window.location.reload();
     },
+    // 清除搜索记录
     clearHistory() {
       window.localStorage.clear();
       window.location.reload();

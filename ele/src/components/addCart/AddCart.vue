@@ -15,43 +15,36 @@ export default {
     price: {
       type: Number,
       default: 0,
-    },
+    },//价格
     name: {
       type: String,
       default: "",
-    },
+    },//名称
     foods: {
       type: Array,
       default() {
         return [];
-      },
+      },//商品列表
     },
   },
   data() {
     return {
-      food: {},
-      goods: [],
+      food: {},//商品
+      goods: [],//商品列表
     };
   },
   created() {},
   methods: {
+    //添加商品
     add() {
       this.food = this.foods[0];
       let payload = {};
-      // let product = this.goods.find(
-      //   (item) => item.food_id === this.food.food_id
-      // );
-      // if (product) {
-      //   this.food.count += 1;
-      // } else {
-      //   this.food.count = 1;
-
-      // }
       this.goods.push(this.food);
       payload.id = this.$route.params.id;
       payload.foods = this.goods;
       this.$store.commit("setCartItem", payload);
     },
+    //弹出框 选取商品规格
     showDialog() {
       this.$store.commit("setGoodName", this.name);
       this.$store.commit("setGoodAtrs", this.foods);

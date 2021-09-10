@@ -298,6 +298,7 @@ export default {
         item.bool = false;
       }
     },
+    // 清空所有商家活动筛选
     clear() {
       this.delivery_mode = [];
       this.support_ids = [];
@@ -306,6 +307,7 @@ export default {
         this.activities[i].bool = false;
       }
     },
+    // 通过商家活动筛选商铺
     getChoiseShops() {
       getFoodShops(
         this.latitude,

@@ -58,6 +58,7 @@ export default {
     showCartBar() {
       this.$store.commit("setShowCartBar", true);
     },
+    // 确认支付
     pay() {
       if (this.price >= this.$store.state.float_minimum_order_amount) {
         this.$router.push("/confirmOrder/" + this.$route.params.id);
